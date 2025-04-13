@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    body {
+      font-family: 'Press Start 2P', monospace;
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    form {
+      margin-bottom: 30px;
+    }
+    label {
+      font-size: 10px;
+      margin-right: 8px;
+    }
+    input[type="date"],
+    select,
+    button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 8px 12px;
+      margin: 5px;
+      background-color: #111;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 4px;
+      outline: none;
+    }
+    button {
+      background-color: #00ff00;
+      color: black;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00cc00;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+      margin: 0 auto 40px;
+    }
+    li {
+      background: #222;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 2px solid #00ff00;
+      font-size: 12px;
+    }
+    a {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #00ff00;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+    a:hover {
+      background-color: #00cc00;
+    }
+  </style>
+</head>
+<body>
+  <h2>🏆 Leaderboard</h2>
+
+  <form method="get">
+    <label for="date">Filter by date:</label>
+    <input type="date" name="date" id="date" value="{{ request.GET.date }}">
+
+    <label for="sort">Sort by:</label>
+    <select name="sort" id="sort">
+      <option value="score" {% if request.GET.sort == "score" %}selected{% endif %}>Score</option>
+      <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Date</option>
+    </select>
+
+    <label for="limit">Show:</label>
+    <select name="limit" id="limit">
+      <option value="10" {% if request.GET.limit == "10" %}selected{% endif %}>Top 10</option>
+      <option value="25" {% if request.GET.limit == "25" %}selected{% endif %}>Top 25</option>
+      <option value="50" {% if request.GET.limit == "50" %}selected{% endif %}>Top 50</option>
+      <option value="all" {% if request.GET.limit == "all" %}selected{% endif %}>All</option>
+    </select>
+
+    <button type="submit">Apply</button>
+  </form>
+
+  <ul>
+    {% for score in scores %}
+      <li>{{ score.name }} – {{ score.score }} ({{ score.created_at|date:"Y-m-d" }})</li>
+    {% empty %}
+      <li>No scores found.</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'play' %}">🎮 Back to Game</a>
+</body>
+</html>

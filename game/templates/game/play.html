@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shooter Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .mobile-controls {
+      position: fixed;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 1000;
+    }
+    .btn-control {
+      font-size: 24px;
+      padding: 15px 20px;
+      border: none;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      border-radius: 10px;
+    }
+    @media (min-width: 768px) {
+      .mobile-controls {
+        display: none;
+      }
+    }
+    .screen { display: none; }
+    .active { display: block; }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+    .auth-form input, .auth-form button {
+      padding: 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Menu -->
+  <!-- Main Menu -->
+<div id="main-menu" class="screen active">
+    <h1>Shooter Game</h1>
+    <p>Enter your name:</p>
+    <input type="text" id="playerName" placeholder="Player" maxlength="20" style="padding: 5px; font-family: 'Press Start 2P', monospace;">
+
+    <p>Select Difficulty:</p>
+    <button onclick="startGame('easy')">Easy</button>
+    <button onclick="startGame('medium')">Medium</button>
+    <button onclick="startGame('hard')">Hard</button>
+    <button onclick="startGame('Xtreme')">Xtreme</button>
+
+    <div style="margin-top: 20px;">
+      <button onclick="location.href='/leaderboard/'">📊 Leaderboard</button>
+    </div>
+  </div>
+  
+
+  <!-- Game UI -->
+  <div id="game-ui" class="screen">
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="health-wrapper">
+      <div>Player Health:</div>
+      <div class="health-bar-container">
+        <div class="health-bar" id="healthBarPlayer"></div>
+      </div>
+      <div>CPU Health:</div>
+      <div class="health-bar-container">
+        <div class="health-bar cpu" id="healthBarCPU"></div>
+      </div>
+    </div>
+    <canvas id="gameCanvas" width="640" height="480"></canvas>
+    <div id="game-over">
+      <h2>Game Over!</h2>
+      <button onclick="location.reload()">Play Again</button>
+    </div>
+    <div style="margin-top: 20px;">
+        <button onclick="location.href='/play/'">🏠 Home</button>
+        <button onclick="location.href='/leaderboard/'">📊 Leaderboard</button>
+      </div>
+  </div>
+
+  <!-- Mobile Controls -->
+  <div class="mobile-controls">
+    <button class="btn-control" id="leftBtn">◀️</button>
+    <button class="btn-control" id="jumpBtn">🍜️</button>
+    <button class="btn-control" id="rightBtn">▶️</button>
+    <button class="btn-control" id="shootBtn">🔫</button>
+  </div>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function startGame(difficulty) {
+      window.difficulty = difficulty;
+      showScreen('game-ui');
+      if (typeof initGame === 'function') initGame();
+    }
+  </script>
+
+  <script src="{% static 'js/game.js' %}"></script>
+</body>
+</html>
